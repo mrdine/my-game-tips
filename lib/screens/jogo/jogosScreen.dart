@@ -10,7 +10,7 @@ class JogosScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Meus jogos")),
+      appBar: AppBar(title: const Text("Meus jogos")),
       body: Center(
           child: GridView.count(
               // Create a grid with 2 columns. If you change the scrollDirection to
