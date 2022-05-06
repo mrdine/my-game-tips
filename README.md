@@ -1,8 +1,10 @@
 # mygametips
 
-A new Flutter project.
+Ideia inicial
 
-## Getting Started
+App para criar lembretes, dicas e tutorias para os jogos que estou jogando.
+
+## Para executar
 
 This project is a starting point for a Flutter application.
 
