@@ -2,7 +2,10 @@
 
 import 'package:flutter/material.dart';
 import 'screens/jogo/jogosScreen.dart';
+import 'screens/tip/tipsScreen.dart';
 import 'models/jogo.dart';
+import 'utils/app_routes.dart';
+import 'screens/tabsScreen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -15,87 +18,27 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
-      home: const MyHomePage(),
-      theme: ThemeData(scaffoldBackgroundColor: const Color(0xFFEFEFEF)),
-    );
-  }
-}
-
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key}) : super(key: key);
-
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  final List<Jogo> _jogos = [
-    Jogo(
-        id: 1,
-        titulo: 'Skyrim',
-        capaUrl:
-            'https://upload.wikimedia.org/wikipedia/pt/a/aa/The_Elder_Scrolls_5_Skyrim_capa.png'),
-    Jogo(
-        id: 2,
-        titulo: 'Elden Ring',
-        capaUrl:
-            'https://upload.wikimedia.org/wikipedia/pt/a/aa/The_Elder_Scrolls_5_Skyrim_capa.png'),
-    Jogo(
-        id: 3,
-        titulo: 'GTA V',
-        capaUrl:
-            'https://upload.wikimedia.org/wikipedia/pt/a/aa/The_Elder_Scrolls_5_Skyrim_capa.png'),
-    Jogo(
-        id: 4,
-        titulo: 'Rainbow Six Siege',
-        capaUrl:
-            'https://upload.wikimedia.org/wikipedia/pt/a/aa/The_Elder_Scrolls_5_Skyrim_capa.png'),
-  ];
-
-  void changetoJogosScreen(BuildContext context) {
-    setState(() {
-      Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => new JogosScreen(myGames: _jogos)));
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text('My Game Tips')),
-      drawer: Drawer(
-        child: ListView(children: <Widget>[
-          SizedBox(
-            height: 70,
-            child: DrawerHeader(
-              decoration: BoxDecoration(
-                color: Colors.blue,
-              ),
-              child: Text('Perfil'),
-            ),
-          ),
-          ListTile(
-            title: Text('Meus jogos'),
-            onTap: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) {
-                return JogosScreen(myGames: _jogos);
-              }));
-            },
-          )
-        ]),
-      ),
-      body: Center(
-          child: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.fromLTRB(0, 200, 0, 0),
-            child: Text('Bem-vindo ao My Game Tips!'),
-          ),
-        ],
-      )),
+      title: 'PlacesToGo',
+      theme: ThemeData(
+          colorScheme: ThemeData()
+              .colorScheme
+              .copyWith(primary: Colors.purple, secondary: Colors.amber),
+          //primarySwatch: Colors.purple,
+          //accentColor: Colors.amber,
+          fontFamily: 'Raleway',
+          canvasColor: Color.fromRGBO(255, 254, 229, 1),
+          textTheme: ThemeData.light().textTheme.copyWith(
+                  headline6: TextStyle(
+                fontSize: 20,
+                fontFamily: 'RobotoCondensed',
+              ))),
+      initialRoute: '/',
+      routes: {
+        AppRoutes.HOME: (ctx) => TabsScreen(),
+        //AppRoutes.GAMES: (ctx) => JogosScreen(myGames: []),
+        //AppRoutes.TIPS: (ctx) => TipsScreen(),
+        //AppRoutes.SETTINGS: (ctx) => SettingsScreen(),
+      },
     );
   }
 }
