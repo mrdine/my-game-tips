@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../../components/main_drawer.dart';
 import '../../models/jogo.dart';
 import '../../components/jogoItem.dart';
@@ -22,19 +23,10 @@ class _JogosScreenState extends State<JogosScreen> {
         titulo: 'Skyrim',
         capaUrl:
             'https://upload.wikimedia.org/wikipedia/pt/a/aa/The_Elder_Scrolls_5_Skyrim_capa.png')*/
-  final List<Jogo> _myGames = [];
 
   JogosAbas _abaAtual = JogosAbas.LISTAR;
 
-  _addJogo(String titulo, String capaUrl) {
-    setState(() {
-      _myGames.add(
-          new Jogo(id: _myGames.length + 1, titulo: titulo, capaUrl: capaUrl));
-      _abaAtual = JogosAbas.LISTAR;
-      print('Adicionado');
-      print(_myGames.length);
-    });
-  }
+  _addJogo(String titulo, String capaUrl) {}
 
   _changeView(JogosAbas aba) {
     setState(() {
@@ -49,7 +41,7 @@ class _JogosScreenState extends State<JogosScreen> {
       appBar: AppBar(title: const Text("Meus jogos")),
       drawer: MainDrawer(),
       body: BodyJogosScreen(
-        games: _myGames,
+        games: Provider.of<ListJogoState>(context, listen: false).getGames(),
         aba: _abaAtual,
         addJogo: _addJogo,
       ),
@@ -82,7 +74,8 @@ class _BodyJogosScreenState extends State<BodyJogosScreen> {
   @override
   Widget build(BuildContext context) {
     if (widget.aba == JogosAbas.LISTAR) {
-      return ListJogos(games: widget.games);
+      print('oi');
+      return ListJogos();
     } else if (widget.aba == JogosAbas.ADD) {
       return AddJogoFormScreen(widget.addJogo);
     } else {
@@ -92,18 +85,18 @@ class _BodyJogosScreenState extends State<BodyJogosScreen> {
 }
 
 class ListJogos extends StatelessWidget {
-  final List<Jogo> games;
-
-  const ListJogos({Key? key, required this.games}) : super(key: key);
+  const ListJogos({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    print('hellow');
     return Center(
       child: GridView.count(
           // Create a grid with 2 columns. If you change the scrollDirection to
           // horizontal, this produces 2 rows.
           crossAxisCount: 2,
-          children: games
+          children: Provider.of<ListJogoState>(context, listen: false)
+              .getGames()
               .map((jogo) => Padding(
                     padding: const EdgeInsets.all(20),
                     child: JogoItem(jogo: jogo),

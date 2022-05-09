@@ -1,6 +1,9 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'dart:math';
+
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../../utils/app_routes.dart';
 import '../../models/jogo.dart';
 
@@ -47,10 +50,23 @@ class _AddJogoFormScreenState extends State<AddJogoFormScreen> {
             ),
           ),
         ),
-        Padding(
+        Consumer<ListJogoState>(builder: (context, games, child) {
+          return Padding(
             padding: const EdgeInsets.all(8.0),
             child: ElevatedButton(
-                child: Text("Adicionar"), onPressed: _submitForm)),
+                child: Text("Adicionar"),
+                onPressed: () {
+                  final r = Random();
+                  games.addJogo(
+                    Jogo(
+                        id: r.nextInt(1000),
+                        titulo: _tituloController.text,
+                        capaUrl: _capaUrlController.text),
+                  );
+                  Navigator.pushReplacementNamed(context, AppRoutes.GAMES);
+                }),
+          );
+        }),
       ]),
     );
   }

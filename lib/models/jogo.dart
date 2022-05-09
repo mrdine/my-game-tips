@@ -1,5 +1,25 @@
+import 'dart:collection';
+
 import 'package:flutter/material.dart';
 import 'package:mygametips/models/tip.dart';
+
+class ListJogoState extends ChangeNotifier {
+  final List<Jogo> _jogos = [];
+  UnmodifiableListView<Jogo> get jogos => UnmodifiableListView(_jogos);
+  void addJogo(Jogo x) {
+    _jogos.add(x);
+    notifyListeners();
+  }
+
+  void removeJogo(Jogo x) {
+    _jogos.remove(x);
+    notifyListeners();
+  }
+
+  List<Jogo> getGames() {
+    return _jogos;
+  }
+}
 
 class Jogo {
   final int id;
@@ -8,7 +28,7 @@ class Jogo {
 
   //final List<Tip> tips;
 
-  const Jogo({
+  Jogo({
     required this.id,
     required this.titulo,
     required this.capaUrl,
