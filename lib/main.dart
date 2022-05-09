@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'PlacesToGo',
+      title: 'My game tips',
       theme: ThemeData(
           colorScheme: ThemeData()
               .colorScheme
@@ -35,7 +35,7 @@ class MyApp extends StatelessWidget {
       initialRoute: '/',
       routes: {
         AppRoutes.HOME: (ctx) => TabsScreen(),
-        //AppRoutes.GAMES: (ctx) => JogosScreen(myGames: []),
+        AppRoutes.GAMES: (ctx) => JogosScreen(),
         //AppRoutes.TIPS: (ctx) => TipsScreen(),
         //AppRoutes.SETTINGS: (ctx) => SettingsScreen(),
       },

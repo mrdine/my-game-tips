@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:mygametips/screens/homeScreen.dart';
+import '../components/main_drawer.dart';
+import '../utils/app_routes.dart';
 import './jogo/jogosScreen.dart';
 import '../models/jogo.dart';
 
@@ -12,11 +15,7 @@ class TabsScreen extends StatefulWidget {
 class _TabsScreenState extends State<TabsScreen> {
   int _indexSelectedScreen = 0;
 
-  final List<Widget> _screens = [
-    JogosScreen(
-      myGames: [],
-    )
-  ];
+  final List<Widget> _screens = [HomeScreen(), JogosScreen()];
 
   _selectScreen(int index) {
     setState(() {
@@ -29,13 +28,7 @@ class _TabsScreenState extends State<TabsScreen> {
     return Scaffold(
       appBar: AppBar(title: Text('My Game Tips')),
       body: _screens[_indexSelectedScreen],
-      drawer: Drawer(
-        child: Container(
-          height: 120,
-          padding: EdgeInsets.all(40),
-          child: Text('Menu Principal'),
-        ),
-      ),
+      drawer: MainDrawer(),
     );
   }
 }

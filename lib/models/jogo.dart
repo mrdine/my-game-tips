@@ -5,10 +5,25 @@ class Jogo {
   final int id;
   final String titulo;
   final String capaUrl;
-  List<Tip> _tips = [];
-  Jogo({
+
+  //final List<Tip> tips;
+
+  const Jogo({
     required this.id,
     required this.titulo,
     required this.capaUrl,
   });
+
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'titulo': titulo,
+      'capaUrl': capaUrl,
+    };
+  }
+
+  @override
+  String toString() {
+    return 'Jogo{id: $id, titulo: $titulo, capaUrl: $capaUrl}';
+  }
 }
