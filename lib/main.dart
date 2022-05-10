@@ -41,6 +41,7 @@ class MyApp extends StatelessWidget {
         routes: {
           AppRoutes.HOME: (ctx) => TabsScreen(),
           AppRoutes.GAMES: (ctx) => JogosScreen(),
+          AppRoutes.GAME_TIPS: (ctx) => TipsScreen(),
           //AppRoutes.TIPS: (ctx) => TipsScreen(),
           //AppRoutes.SETTINGS: (ctx) => SettingsScreen(),
         },

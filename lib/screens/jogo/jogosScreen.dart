@@ -8,7 +8,7 @@ import '../../components/jogoItem.dart';
 import '../../utils/app_routes.dart';
 import './addJogoFormScreen.dart';
 
-enum JogosAbas { LISTAR, ADD }
+enum JogosAbas { LISTAR, ADD, LISTAR_TIPS }
 
 class JogosScreen extends StatefulWidget {
   const JogosScreen({Key? key}) : super(key: key);
@@ -99,7 +99,12 @@ class ListJogos extends StatelessWidget {
               .getGames()
               .map((jogo) => Padding(
                     padding: const EdgeInsets.all(20),
-                    child: JogoItem(jogo: jogo),
+                    child: GestureDetector(
+                        child: JogoItem(jogo: jogo),
+                        onTap: () {
+                          Navigator.pushNamed(context, AppRoutes.GAME_TIPS,
+                              arguments: jogo);
+                        }),
                   ))
               .toList()),
     );

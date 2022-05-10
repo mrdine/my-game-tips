@@ -19,6 +19,10 @@ class ListJogoState extends ChangeNotifier {
   List<Jogo> getGames() {
     return _jogos;
   }
+
+  List<Tip> getTipsByGameId(int id) {
+    return _jogos.firstWhere((jogo) => jogo.id == id).tips;
+  }
 }
 
 class Jogo {
@@ -26,13 +30,13 @@ class Jogo {
   final String titulo;
   final String capaUrl;
 
-  //final List<Tip> tips;
+  final List<Tip> tips;
 
-  Jogo({
-    required this.id,
-    required this.titulo,
-    required this.capaUrl,
-  });
+  Jogo(
+      {required this.id,
+      required this.titulo,
+      required this.capaUrl,
+      required this.tips});
 
   Map<String, dynamic> toMap() {
     return {

@@ -61,7 +61,8 @@ class _AddJogoFormScreenState extends State<AddJogoFormScreen> {
                     Jogo(
                         id: r.nextInt(1000),
                         titulo: _tituloController.text,
-                        capaUrl: _capaUrlController.text),
+                        capaUrl: _capaUrlController.text,
+                        tips: []),
                   );
                   Navigator.pushReplacementNamed(context, AppRoutes.GAMES);
                 }),
