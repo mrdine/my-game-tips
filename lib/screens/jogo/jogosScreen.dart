@@ -49,7 +49,7 @@ class _JogosScreenState extends State<JogosScreen> {
         onPressed: () {
           _changeView(JogosAbas.ADD);
         },
-        backgroundColor: Colors.purple,
+        backgroundColor: Colors.redAccent,
         child: Icon(Icons.add),
       ),
     );

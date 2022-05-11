@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:flutter/material.dart';
 import 'package:getwidget/getwidget.dart';
 
@@ -10,29 +12,22 @@ class TipItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GFCard(
-      boxFit: BoxFit.cover,
-      titlePosition: GFPosition.start,
-      showOverlayImage: true,
-      imageOverlay: AssetImage(
-        'assets/images/tipBackground.png',
-      ),
-      title: GFListTile(
-        avatar: GFAvatar(),
-        titleText: tip.titulo,
-        subTitleText: tip.categoria,
-      ),
-      content: Text(""),
-      buttonBar: GFButtonBar(
-        children: <Widget>[
-          GFAvatar(
-            backgroundColor: GFColors.PRIMARY,
-            child: Icon(
-              Icons.share,
-              color: Colors.white,
-            ),
-          ),
-        ],
+    return Container(
+      height: 200,
+      child: GFCard(
+        margin: EdgeInsets.all(10),
+        height: 10,
+        boxFit: BoxFit.cover,
+        titlePosition: GFPosition.start,
+        showOverlayImage: true,
+        imageOverlay: AssetImage(
+          'assets/images/tipBackground.png',
+        ),
+        title: GFListTile(
+          titleText: tip.titulo,
+          subTitleText: tip.categoria,
+        ),
+        content: Text(tip.conteudo),
       ),
     );
   }

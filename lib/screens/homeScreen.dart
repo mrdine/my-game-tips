@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:getwidget/getwidget.dart';
 import 'package:mygametips/models/jogo.dart';
 import 'package:provider/provider.dart';
 
@@ -20,21 +21,37 @@ class _HomeScreenState extends State<HomeScreen> {
             child: GridView.count(
       // Create a grid with 2 columns. If you change the scrollDirection to
       // horizontal, this produces 2 rows.
-      crossAxisCount: 2,
+      crossAxisCount: 1,
       children: [
         Center(
-          child: InkWell(
-              child: Container(
-                  width: 100,
-                  height: 100,
-                  decoration: const BoxDecoration(
-                    color: Colors.purple,
-                    shape: BoxShape.circle,
-                  ),
-                  child: const Center(child: Text('Meus Jogos'))),
-              onTap: () {
-                Navigator.pushReplacementNamed(context, AppRoutes.GAMES);
-              }),
+          child: ListView(children: [
+            InkWell(
+                child: GFListTile(
+                    titleText: 'Meus Jogos',
+                    subTitleText: 'Crie e acesse as suas próprias tips',
+                    color: Color.fromARGB(255, 255, 255, 255),
+                    hoverColor: Colors.grey,
+                    avatar: GFImageOverlay(
+                        height: 72,
+                        width: 128,
+                        image: AssetImage('assets/images/gamesLibrary.png'))),
+                onTap: () {
+                  Navigator.pushReplacementNamed(context, AppRoutes.GAMES);
+                }),
+            InkWell(
+                child: GFListTile(
+                    titleText: 'Explorar',
+                    subTitleText: 'Acesse tips criadas por outros jogadores',
+                    color: Color.fromARGB(255, 255, 255, 255),
+                    hoverColor: Colors.grey,
+                    avatar: GFImageOverlay(
+                        height: 72,
+                        width: 128,
+                        image: AssetImage('assets/images/onlineLibrary.png'))),
+                onTap: () {
+                  //Navigator.pushReplacementNamed(context, AppRoutes.GAMES);
+                }),
+          ]),
         )
       ],
     )));

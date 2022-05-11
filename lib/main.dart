@@ -27,11 +27,11 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
             colorScheme: ThemeData()
                 .colorScheme
-                .copyWith(primary: Colors.purple, secondary: Colors.amber),
+                .copyWith(primary: Colors.redAccent, secondary: Colors.amber),
             //primarySwatch: Colors.purple,
             //accentColor: Colors.amber,
             fontFamily: 'Raleway',
-            canvasColor: Color.fromRGBO(255, 254, 229, 1),
+            canvasColor: Color.fromARGB(255, 247, 247, 241),
             textTheme: ThemeData.light().textTheme.copyWith(
                     headline6: TextStyle(
                   fontSize: 20,
