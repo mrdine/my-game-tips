@@ -1,9 +1,10 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
 import 'package:flutter/material.dart';
+import 'package:mygametips/screens/tip/tipFormScreen.dart';
 import 'package:provider/provider.dart';
 import 'screens/jogo/jogosScreen.dart';
-import 'screens/tip/tipsScreen.dart';
+import 'screens/tip/listTipsScreen.dart';
 import 'models/jogo.dart';
 import 'utils/app_routes.dart';
 import 'screens/tabsScreen.dart';
@@ -41,8 +42,8 @@ class MyApp extends StatelessWidget {
         routes: {
           AppRoutes.HOME: (ctx) => TabsScreen(),
           AppRoutes.GAMES: (ctx) => JogosScreen(),
-          AppRoutes.GAME_TIPS: (ctx) => TipsScreen(),
-          //AppRoutes.TIPS: (ctx) => TipsScreen(),
+          AppRoutes.GAME_TIPS: (ctx) => ListTipsScreen(),
+          AppRoutes.TIPS_FORM: (ctx) => TipFormScreen(),
           //AppRoutes.SETTINGS: (ctx) => SettingsScreen(),
         },
       ),

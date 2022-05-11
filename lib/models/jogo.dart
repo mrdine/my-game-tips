@@ -11,16 +11,16 @@ class ListJogoState extends ChangeNotifier {
         capaUrl:
             'https://upload.wikimedia.org/wikipedia/pt/a/aa/The_Elder_Scrolls_5_Skyrim_capa.png',
         tips: [
-          Tip(
+          const Tip(
               id: 1,
               titulo: 'Como aprender fireball',
               conteudo: 'Aprendendo',
               categoria: 'Tutorial'),
-          Tip(
+          const Tip(
               id: 2,
               titulo: 'Como derrotar Alduin',
-              categoria: 'Dica',
-              conteudo: 'Apelando'),
+              conteudo: 'Apelando',
+              categoria: 'Dica'),
         ]),
     Jogo(
         id: 2,
@@ -39,6 +39,11 @@ class ListJogoState extends ChangeNotifier {
   void removeJogo(Jogo x) {
     _jogos.remove(x);
     notifyListeners();
+  }
+
+  void addTip(Jogo x, Tip y) {
+    final jogo = _jogos.indexOf(x);
+    _jogos[jogo].addTip(y);
   }
 
   List<Jogo> getGames() {
@@ -70,6 +75,8 @@ class Jogo {
       'capaUrl': capaUrl,
     };
   }
+
+  void addTip(Tip x) => tips.add(x);
 
   @override
   String toString() {

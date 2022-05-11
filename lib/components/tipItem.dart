@@ -13,7 +13,7 @@ class TipItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 200,
+      height: 50,
       child: GFCard(
         margin: EdgeInsets.all(10),
         height: 10,

@@ -26,7 +26,7 @@ class _HomeScreenState extends State<HomeScreen> {
         Center(
           child: ListView(children: [
             InkWell(
-                child: GFListTile(
+                child: const GFListTile(
                     titleText: 'Meus Jogos',
                     subTitleText: 'Crie e acesse as suas próprias tips',
                     color: Color.fromARGB(255, 255, 255, 255),
@@ -39,7 +39,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   Navigator.pushReplacementNamed(context, AppRoutes.GAMES);
                 }),
             InkWell(
-                child: GFListTile(
+                child: const GFListTile(
                     titleText: 'Explorar',
                     subTitleText: 'Acesse tips criadas por outros jogadores',
                     color: Color.fromARGB(255, 255, 255, 255),

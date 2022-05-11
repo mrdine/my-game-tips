@@ -31,7 +31,6 @@ class _JogosScreenState extends State<JogosScreen> {
   _changeView(JogosAbas aba) {
     setState(() {
       _abaAtual = aba;
-      print(_abaAtual);
     });
   }
 
@@ -74,7 +73,6 @@ class _BodyJogosScreenState extends State<BodyJogosScreen> {
   @override
   Widget build(BuildContext context) {
     if (widget.aba == JogosAbas.LISTAR) {
-      print('oi');
       return ListJogos();
     } else if (widget.aba == JogosAbas.ADD) {
       return AddJogoFormScreen(widget.addJogo);
@@ -89,7 +87,6 @@ class ListJogos extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print('hellow');
     return Center(
       child: GridView.count(
           // Create a grid with 2 columns. If you change the scrollDirection to
@@ -102,8 +99,40 @@ class ListJogos extends StatelessWidget {
                     child: GestureDetector(
                         child: JogoItem(jogo: jogo),
                         onTap: () {
-                          Navigator.pushNamed(context, AppRoutes.GAME_TIPS,
-                              arguments: jogo);
+                          showModalBottomSheet(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return SizedBox(
+                                  height: 200,
+                                  child: Column(
+                                    children: [
+                                      ElevatedButton(
+                                        onPressed: () {
+                                          Navigator.pushNamed(
+                                              context, AppRoutes.TIPS_FORM,
+                                              arguments: jogo);
+                                        },
+                                        child: Text('Adicionar Dica'),
+                                      ),
+                                      ElevatedButton(
+                                        onPressed: () {
+                                          Navigator.pushNamed(
+                                              context, AppRoutes.GAME_TIPS,
+                                              arguments: jogo);
+                                          print('Ver dicas');
+                                        },
+                                        child: Text('Ver dicas para esse jogo'),
+                                      ),
+                                      ElevatedButton(
+                                        onPressed: () => Navigator.pop(context),
+                                        child: Text('Voltar'),
+                                      )
+                                    ],
+                                  ),
+                                );
+                              });
+                          // Navigator.pushNamed(context, AppRoutes.GAME_TIPS,
+                          //     arguments: jogo);
                         }),
                   ))
               .toList()),
