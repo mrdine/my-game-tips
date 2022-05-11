@@ -87,55 +87,69 @@ class ListJogos extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: GridView.count(
-          // Create a grid with 2 columns. If you change the scrollDirection to
-          // horizontal, this produces 2 rows.
-          crossAxisCount: 2,
-          children: Provider.of<ListJogoState>(context, listen: false)
-              .getGames()
-              .map((jogo) => Padding(
-                    padding: const EdgeInsets.all(20),
-                    child: GestureDetector(
-                        child: JogoItem(jogo: jogo),
-                        onTap: () {
-                          showModalBottomSheet(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return SizedBox(
-                                  height: 200,
-                                  child: Column(
-                                    children: [
-                                      ElevatedButton(
-                                        onPressed: () {
-                                          Navigator.pushNamed(
-                                              context, AppRoutes.TIPS_FORM,
-                                              arguments: jogo);
-                                        },
-                                        child: Text('Adicionar Dica'),
-                                      ),
-                                      ElevatedButton(
-                                        onPressed: () {
-                                          Navigator.pushNamed(
-                                              context, AppRoutes.GAME_TIPS,
-                                              arguments: jogo);
-                                          print('Ver dicas');
-                                        },
-                                        child: Text('Ver dicas para esse jogo'),
-                                      ),
-                                      ElevatedButton(
-                                        onPressed: () => Navigator.pop(context),
-                                        child: Text('Voltar'),
-                                      )
-                                    ],
-                                  ),
-                                );
-                              });
-                          // Navigator.pushNamed(context, AppRoutes.GAME_TIPS,
-                          //     arguments: jogo);
-                        }),
-                  ))
-              .toList()),
-    );
+    return Consumer<ListJogoState>(builder: ((context, games, child) {
+      return Center(
+        child: GridView.count(
+            // Create a grid with 2 columns. If you change the scrollDirection to
+            // horizontal, this produces 2 rows.
+            crossAxisCount: 2,
+            children: games
+                .getGames()
+                .map((jogo) => Padding(
+                      padding: const EdgeInsets.all(20),
+                      child: GestureDetector(
+                          child: JogoItem(jogo: jogo),
+                          onTap: () {
+                            showModalBottomSheet(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return SizedBox(
+                                    height: 200,
+                                    child: Column(
+                                      children: [
+                                        ElevatedButton(
+                                          onPressed: () {
+                                            print(
+                                                'Adicionando no jogo ${jogo.id}');
+                                            Navigator.pushNamed(
+                                                context, AppRoutes.TIPS_FORM,
+                                                arguments: jogo);
+                                          },
+                                          child: Text('Adicionar Dica'),
+                                        ),
+                                        ElevatedButton(
+                                          onPressed: () {
+                                            print(
+                                                'Vendo dicas do jogo ${jogo.titulo}');
+                                            Navigator.pushNamed(
+                                                context, AppRoutes.GAME_TIPS,
+                                                arguments: jogo);
+                                          },
+                                          child:
+                                              Text('Ver dicas para esse jogo'),
+                                        ),
+                                        ElevatedButton(
+                                          onPressed: () {
+                                            games.removeJogo(jogo);
+                                            Navigator.pop(context);
+                                          },
+                                          child: Text("Remover Jogo"),
+                                        ),
+                                        ElevatedButton(
+                                          onPressed: () =>
+                                              Navigator.pop(context),
+                                          child: Text('Voltar'),
+                                        )
+                                      ],
+                                    ),
+                                  );
+                                });
+                            // Navigator.pushNamed(context, AppRoutes.GAME_TIPS,
+                            //     arguments: jogo);
+                          }),
+                    ))
+                .toList()),
+      );
+    }));
   }
 }

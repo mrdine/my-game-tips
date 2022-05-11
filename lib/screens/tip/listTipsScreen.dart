@@ -12,8 +12,16 @@ class ListTipsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final jogo = ModalRoute.of(context)!.settings.arguments as Jogo;
     if (jogo.tips.isEmpty) {
-      return const Center(
-        child: Text('Não há tips para este jogo'),
+      return Scaffold(
+        appBar: AppBar(title: Text('Lista de Dicas para ${jogo.titulo}')),
+        body: const Center(
+          child: Text(
+            'Não há tips para este jogo',
+            style: TextStyle(
+              fontSize: 30,
+            ),
+          ),
+        ),
       );
     } else {
       return Scaffold(

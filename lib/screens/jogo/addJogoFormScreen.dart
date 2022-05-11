@@ -56,10 +56,9 @@ class _AddJogoFormScreenState extends State<AddJogoFormScreen> {
             child: ElevatedButton(
                 child: Text("Adicionar"),
                 onPressed: () {
-                  final r = Random();
                   games.addJogo(
                     Jogo(
-                        id: r.nextInt(1000),
+                        id: games.getNextId(),
                         titulo: _tituloController.text,
                         capaUrl: _capaUrlController.text,
                         tips: []),

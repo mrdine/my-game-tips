@@ -6,7 +6,7 @@ import 'package:mygametips/models/tip.dart';
 class ListJogoState extends ChangeNotifier {
   final List<Jogo> _jogos = [
     Jogo(
-        id: 1,
+        id: 0,
         titulo: 'Skyrim',
         capaUrl:
             'https://upload.wikimedia.org/wikipedia/pt/a/aa/The_Elder_Scrolls_5_Skyrim_capa.png',
@@ -23,7 +23,7 @@ class ListJogoState extends ChangeNotifier {
               categoria: 'Dica'),
         ]),
     Jogo(
-        id: 2,
+        id: 1,
         titulo: 'The Witcher 3',
         capaUrl:
             'https://upload.wikimedia.org/wikipedia/pt/0/06/TW3_Wild_Hunt.png',
@@ -52,6 +52,10 @@ class ListJogoState extends ChangeNotifier {
 
   List<Tip> getTipsByGameId(int id) {
     return _jogos.firstWhere((jogo) => jogo.id == id).tips;
+  }
+
+  int getNextId() {
+    return _jogos.length + 1;
   }
 }
 
