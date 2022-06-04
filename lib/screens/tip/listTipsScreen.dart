@@ -29,7 +29,7 @@ class ListTipsScreen extends StatelessWidget {
         body: Center(
           child: GridView.count(
               crossAxisCount: 1,
-              children: Provider.of<ListJogoState>(context, listen: false)
+              children: Provider.of<JogoState>(context, listen: false)
                   .getTipsByGameId(jogo.id)
                   .map((tip) => Padding(
                         padding: const EdgeInsets.all(1),

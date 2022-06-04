@@ -40,7 +40,7 @@ class _JogosScreenState extends State<JogosScreen> {
       appBar: AppBar(title: const Text("Meus jogos")),
       drawer: MainDrawer(),
       body: BodyJogosScreen(
-        games: Provider.of<ListJogoState>(context, listen: false).getGames(),
+        games: Provider.of<JogoState>(context, listen: false).getGames(),
         aba: _abaAtual,
         addJogo: _addJogo,
       ),
@@ -87,7 +87,7 @@ class ListJogos extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<ListJogoState>(builder: ((context, games, child) {
+    return Consumer<JogoState>(builder: ((context, games, child) {
       return Center(
         child: GridView.count(
             // Create a grid with 2 columns. If you change the scrollDirection to

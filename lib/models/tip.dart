@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 
 class Tip {
@@ -12,4 +14,19 @@ class Tip {
     required this.conteudo,
     required this.categoria,
   });
+
+  String toJson() {
+    return jsonEncode({
+      'id': id,
+      'titulo': titulo,
+      'conteudo': conteudo,
+      'categoria': categoria,
+    });
+  }
+
+  Tip.fromJson(Map<String, dynamic> json)
+      : id = json['id'],
+        titulo = json['titulo'],
+        conteudo = json['conteudo'],
+        categoria = json['categoria'];
 }

@@ -20,6 +20,8 @@ class _AddJogoFormScreenState extends State<AddJogoFormScreen> {
   final _tituloController = TextEditingController();
   final _capaUrlController = TextEditingController();
 
+  bool _isLoading = false;
+
   _submitForm() {
     if (_tituloController.text.isEmpty || _capaUrlController.text.isEmpty) {
       print('valores invalidos');
@@ -50,20 +52,37 @@ class _AddJogoFormScreenState extends State<AddJogoFormScreen> {
             ),
           ),
         ),
-        Consumer<ListJogoState>(builder: (context, games, child) {
+        Consumer<JogoState>(builder: (context, games, child) {
           return Padding(
             padding: const EdgeInsets.all(8.0),
             child: ElevatedButton(
-                child: Text("Adicionar"),
+                style: ElevatedButton.styleFrom(
+                    maximumSize: Size.fromHeight(50),
+                    minimumSize: Size.fromHeight(50)),
+                child: _isLoading
+                    ? Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: CircularProgressIndicator(
+                          color: Colors.white,
+                        ),
+                      )
+                    : Text("Adicionar"),
                 onPressed: () {
-                  games.addJogo(
-                    Jogo(
-                        id: games.getNextId(),
-                        titulo: _tituloController.text,
-                        capaUrl: _capaUrlController.text,
-                        tips: []),
-                  );
-                  Navigator.pushReplacementNamed(context, AppRoutes.GAMES);
+                  if (_isLoading) return;
+
+                  setState(() {
+                    _isLoading = true;
+                  });
+
+                  games
+                      .addJogo(
+                        Jogo(
+                            titulo: _tituloController.text,
+                            capaUrl: _capaUrlController.text,
+                            tips: []),
+                      )
+                      .then((value) => Navigator.pushReplacementNamed(
+                          context, AppRoutes.GAMES));
                 }),
           );
         }),

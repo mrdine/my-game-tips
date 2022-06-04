@@ -1,39 +1,55 @@
 import 'dart:collection';
 
 import 'package:flutter/material.dart';
+import 'package:mygametips/data/dummy_data.dart';
 import 'package:mygametips/models/tip.dart';
+import 'dart:convert';
 
-class ListJogoState extends ChangeNotifier {
-  final List<Jogo> _jogos = [
-    Jogo(
-        id: 0,
-        titulo: 'Skyrim',
-        capaUrl:
-            'https://upload.wikimedia.org/wikipedia/pt/a/aa/The_Elder_Scrolls_5_Skyrim_capa.png',
-        tips: [
-          const Tip(
-              id: 1,
-              titulo: 'Como aprender fireball',
-              conteudo: 'Aprendendo',
-              categoria: 'Tutorial'),
-          const Tip(
-              id: 2,
-              titulo: 'Como derrotar Alduin',
-              conteudo: 'Apelando',
-              categoria: 'Dica'),
-        ]),
-    Jogo(
-        id: 1,
-        titulo: 'The Witcher 3',
-        capaUrl:
-            'https://upload.wikimedia.org/wikipedia/pt/0/06/TW3_Wild_Hunt.png',
-        tips: []),
-  ];
+import 'package:flutter/cupertino.dart';
+import 'package:http/http.dart' as http;
+
+class JogoState extends ChangeNotifier {
+  final _baseUrl = 'https://mygametips-df312-default-rtdb.firebaseio.com';
+
+  //https://upload.wikimedia.org/wikipedia/pt/0/06/TW3_Wild_Hunt.png
+
+  JogoState() {
+    _loadJogos();
+  }
+
+  final List<Jogo> _jogos = [];
+
   UnmodifiableListView<Jogo> get jogos => UnmodifiableListView(_jogos);
-  void addJogo(Jogo x) {
-    x.id = _jogos.length;
-    _jogos.add(x);
-    notifyListeners();
+
+  Future<void> _loadJogos() {
+    return http.get(Uri.parse('$_baseUrl/jogos.json')).then((response) {
+      final Map<String, dynamic> dadosJogos = json.decode(response.body);
+      final List<Jogo> jogos = [];
+      print(dadosJogos);
+      dadosJogos.forEach((String id, dynamic dados) {
+        final Jogo jogo = Jogo.fromJson(dados);
+        jogo.id = id;
+        jogos.add(jogo);
+      });
+      _jogos.clear();
+      _jogos.addAll(jogos);
+      notifyListeners();
+    });
+  }
+
+  Future<void> addJogo(Jogo x) {
+    final future = http.post(Uri.parse('$_baseUrl/jogos.json'),
+        body: jsonEncode({
+          'titulo': x.titulo,
+          'capaUrl': x.capaUrl,
+          'tips': x.tips.map((tip) => tip.toJson()).toList()
+        }));
+
+    return future.then((response) {
+      x.id = jsonDecode(response.body)['name'];
+      _jogos.add(x);
+      notifyListeners();
+    });
   }
 
   void removeJogo(Jogo x) {
@@ -50,7 +66,7 @@ class ListJogoState extends ChangeNotifier {
     return _jogos;
   }
 
-  List<Tip> getTipsByGameId(int id) {
+  List<Tip> getTipsByGameId(String id) {
     return _jogos.firstWhere((jogo) => jogo.id == id).tips;
   }
 
@@ -60,14 +76,14 @@ class ListJogoState extends ChangeNotifier {
 }
 
 class Jogo {
-  int id;
+  String id;
   final String titulo;
   final String capaUrl;
 
   final List<Tip> tips;
 
   Jogo(
-      {this.id = 0,
+      {this.id = '0',
       required this.titulo,
       required this.capaUrl,
       required this.tips});
@@ -79,6 +95,16 @@ class Jogo {
       'capaUrl': capaUrl,
     };
   }
+
+  Jogo.fromJson(Map<String, dynamic> json)
+      : id = '',
+        titulo = json['titulo'],
+        capaUrl = json['capaUrl'],
+        tips = json.containsKey('tips')
+            ? jsonDecode(json['tips'])
+                .map<Tip>((tip) => Tip.fromJson(tip))
+                .toList()
+            : [];
 
   void addTip(Tip x) => tips.add(x);
 

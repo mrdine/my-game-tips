@@ -22,7 +22,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (constext) => ListJogoState(),
+      create: (constext) => JogoState(),
       child: MaterialApp(
         title: 'My game tips',
         theme: ThemeData(

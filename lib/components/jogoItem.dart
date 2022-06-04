@@ -10,6 +10,23 @@ class JogoItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(child: Image.network(jogo.capaUrl));
+    return Center(
+        child: Image.network(
+      jogo.capaUrl,
+      loadingBuilder: (BuildContext context, Widget child,
+          ImageChunkEvent? loadingProgress) {
+        if (loadingProgress == null) {
+          return child;
+        }
+        return Center(
+          child: CircularProgressIndicator(
+            value: loadingProgress.expectedTotalBytes != null
+                ? loadingProgress.cumulativeBytesLoaded /
+                    loadingProgress.expectedTotalBytes!
+                : null,
+          ),
+        );
+      },
+    ));
   }
 }

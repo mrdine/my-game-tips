@@ -66,7 +66,7 @@ class _TipFormScreenState extends State<TipFormScreen> {
                     });
                   },
                 ),
-                Consumer<ListJogoState>(
+                Consumer<JogoState>(
                   builder: (context, lista, child) {
                     return ElevatedButton(
                       onPressed: () {
