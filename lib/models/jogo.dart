@@ -4,8 +4,8 @@ import 'package:mygametips/models/tip.dart';
 
 class Jogo {
   String id;
-  final String titulo;
-  final String capaUrl;
+  String titulo;
+  String capaUrl;
 
   List<Tip> tips;
 

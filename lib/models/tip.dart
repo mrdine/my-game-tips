@@ -4,12 +4,12 @@ import 'package:flutter/material.dart';
 
 class Tip {
   final String id;
-  final String titulo;
-  final String conteudo;
-  final String categoria;
+  String titulo;
+  String conteudo;
+  String categoria;
   final String gameId;
 
-  const Tip({
+  Tip({
     required this.id,
     required this.titulo,
     required this.conteudo,
@@ -19,7 +19,6 @@ class Tip {
 
   String toJson() {
     return jsonEncode({
-      'id': id,
       'gameId': gameId,
       'titulo': titulo,
       'conteudo': conteudo,

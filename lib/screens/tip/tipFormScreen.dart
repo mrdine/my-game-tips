@@ -7,6 +7,8 @@ import 'package:mygametips/models/tip.dart';
 import 'package:provider/provider.dart';
 
 class TipFormScreen extends StatefulWidget {
+  Tip? tip;
+
   TipFormScreen();
 
   @override
@@ -15,28 +17,45 @@ class TipFormScreen extends StatefulWidget {
 
 class _TipFormScreenState extends State<TipFormScreen> {
   String dropDownValue = 'Dica';
-  var tituloControler = TextEditingController();
-  var conteudoControler = TextEditingController();
+  final _tituloControler = TextEditingController();
+  final _conteudoControler = TextEditingController();
 
-  _submit(JogoState lista, Jogo jogo) {
-    final x = Tip(
-      gameId: jogo.id,
-      id: '12',
-      titulo: tituloControler.text,
-      conteudo: conteudoControler.text,
-      categoria: dropDownValue,
-    );
-    lista.addTip(jogo, x);
+  _submit(JogoState lista, Jogo jogo, Tip? tip) {
+    if (tip == null) {
+      final x = Tip(
+        gameId: jogo.id,
+        id: '12',
+        titulo: _tituloControler.text,
+        conteudo: _conteudoControler.text,
+        categoria: dropDownValue,
+      );
+      lista.addTip(jogo, x);
+    } else {
+      Provider.of<JogoState>(context, listen: false).editTip(
+          Tip(
+            gameId: jogo.id,
+            id: tip.id,
+            titulo: _tituloControler.text,
+            conteudo: _conteudoControler.text,
+            categoria: dropDownValue,
+          ),
+          jogo);
+    }
     Navigator.pop(context);
   }
 
   @override
   Widget build(BuildContext context) {
-    final jogo = ModalRoute.of(context)!.settings.arguments as Jogo;
+    final arg =
+        ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+    _tituloControler.text = arg['tip']?.titulo ?? '';
+    _conteudoControler.text = arg['tip']?.conteudo ?? '';
+    dropDownValue = arg['tip']?.categoria ?? 'Dica';
     return Scaffold(
       appBar: AppBar(
-        title: Text("Adicone uma Dica ${jogo.titulo}"),
-      ),
+          title: arg['jogo'] != null
+              ? Text("Adicone uma Dica ${arg['jogo'].titulo}")
+              : const Text("Editando Dica")),
       body: Center(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -44,7 +63,7 @@ class _TipFormScreenState extends State<TipFormScreen> {
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: TextField(
-                controller: tituloControler,
+                controller: _tituloControler,
                 decoration: const InputDecoration(
                   border: OutlineInputBorder(),
                   labelText: 'Titulo',
@@ -54,7 +73,7 @@ class _TipFormScreenState extends State<TipFormScreen> {
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: TextField(
-                controller: conteudoControler,
+                controller: _conteudoControler,
                 maxLines: 5,
                 decoration: const InputDecoration(
                   border: OutlineInputBorder(),
@@ -82,7 +101,7 @@ class _TipFormScreenState extends State<TipFormScreen> {
                 Consumer<JogoState>(
                   builder: (context, lista, child) {
                     return ElevatedButton(
-                      onPressed: () => _submit(lista, jogo),
+                      onPressed: () => _submit(lista, arg['jogo'], arg['tip']),
                       child: const Text(
                         'Adicionar',
                       ),

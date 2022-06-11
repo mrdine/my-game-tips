@@ -36,11 +36,12 @@ class ListTipsScreen extends StatelessWidget {
                 children:
                     jogos.jogo.firstWhere((game) => game == jogo).tips.map(
                   (tip) {
-                    print(tip.categoria);
                     return Padding(
                       padding: const EdgeInsets.all(1),
-                      child: GestureDetector(
-                          child: TipItem(tip: tip), onTap: () {}),
+                      child: TipItem(
+                        tip: tip,
+                        jogo: jogo,
+                      ),
                     );
                   },
                 ).toList()),

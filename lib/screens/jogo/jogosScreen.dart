@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:mygametips/models/jogo.dart';
+import 'package:path/path.dart';
 import 'package:provider/provider.dart';
 import '../../components/main_drawer.dart';
 import '../../models/jogo_state.dart';
@@ -76,7 +77,7 @@ class _BodyJogosScreenState extends State<BodyJogosScreen> {
     if (widget.aba == JogosAbas.LISTAR) {
       return ListJogos();
     } else if (widget.aba == JogosAbas.ADD) {
-      return AddJogoFormScreen(widget.addJogo);
+      return AddJogoFormScreen(widget.addJogo, null);
     } else {
       return Text('...');
     }
@@ -86,6 +87,14 @@ class _BodyJogosScreenState extends State<BodyJogosScreen> {
 class ListJogos extends StatelessWidget {
   const ListJogos({Key? key}) : super(key: key);
 
+  _updateGame(String nome, String url, Jogo jogo, BuildContext context) {
+    Provider.of<JogoState>(context, listen: false).editGame(nome, url, jogo);
+    Navigator.pushReplacementNamed(
+      context,
+      AppRoutes.GAMES,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Consumer<JogoState>(builder: ((context, games, child) {
@@ -94,8 +103,7 @@ class ListJogos extends StatelessWidget {
             // Create a grid with 2 columns. If you change the scrollDirection to
             // horizontal, this produces 2 rows.
             crossAxisCount: 2,
-            children: games
-                .getGames()
+            children: games.jogo
                 .map((jogo) => Padding(
                       padding: const EdgeInsets.all(20),
                       child: GestureDetector(
@@ -105,14 +113,17 @@ class ListJogos extends StatelessWidget {
                                 context: context,
                                 builder: (BuildContext context) {
                                   return SizedBox(
-                                    height: 200,
+                                    height: 250,
                                     child: Column(
                                       children: [
                                         ElevatedButton(
                                           onPressed: () {
                                             Navigator.pushNamed(
                                                 context, AppRoutes.TIPS_FORM,
-                                                arguments: jogo);
+                                                arguments: {
+                                                  'jogo': jogo,
+                                                  'tip': null
+                                                });
                                           },
                                           child: Text('Adicionar Dica'),
                                         ),
@@ -124,6 +135,19 @@ class ListJogos extends StatelessWidget {
                                           },
                                           child:
                                               Text('Ver dicas para esse jogo'),
+                                        ),
+                                        ElevatedButton(
+                                          onPressed: () {
+                                            Navigator.push(context,
+                                                MaterialPageRoute(
+                                                    builder: (context) {
+                                              return AddJogoFormScreen(
+                                                  (nome, url) => _updateGame(
+                                                      nome, url, jogo, context),
+                                                  jogo);
+                                            }));
+                                          },
+                                          child: Text("Editar Jogo"),
                                         ),
                                         ElevatedButton(
                                           onPressed: () {

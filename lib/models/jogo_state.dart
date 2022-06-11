@@ -1,7 +1,6 @@
 import 'dart:collection';
 
 import 'package:flutter/material.dart';
-import 'package:mygametips/data/dummy_data.dart';
 import 'package:mygametips/models/jogo.dart';
 import 'package:mygametips/models/tip.dart';
 import 'dart:convert';
@@ -41,6 +40,31 @@ class JogoState extends ChangeNotifier {
     );
   }
 
+  void editTip(Tip tip, Jogo jogo) {
+    print(tip.titulo);
+    print(jogo.id);
+    _jogos
+        .firstWhere((game) => game.id == jogo.id)
+        .tips
+        .firstWhere((top) => top.id == tip.id)
+        .titulo = tip.titulo;
+    _jogos
+        .firstWhere((game) => game.id == jogo.id)
+        .tips
+        .firstWhere((top) => top.id == tip.id)
+        .conteudo = tip.conteudo;
+    notifyListeners();
+    http
+        .put(Uri.parse('$_baseUrl/tips/${tip.id}/titulo.json'),
+            body: '"${tip.titulo}"')
+        .then((ob) => print(ob));
+    http.put(Uri.parse('$_baseUrl/tips/${tip.id}/conteudo.json'),
+        body: '"${tip.conteudo}"');
+    http.put(Uri.parse('$_baseUrl/tips/${tip.id}/categoria.json'),
+        body: '"${tip.categoria}"');
+    print('editando dica');
+  }
+
   Future<void> addJogo(Jogo x) {
     final future = http.post(Uri.parse('$_baseUrl/jogos.json'),
         body: jsonEncode({
@@ -57,14 +81,53 @@ class JogoState extends ChangeNotifier {
   }
 
   void removeJogo(Jogo x) {
+    _removerJogoTips(x);
     _jogos.remove(x);
+    http.delete(Uri.parse('$_baseUrl/jogos/${x.id}.json'));
+    notifyListeners();
+  }
+
+  void _removerJogoTips(Jogo x) {
+    x.tips.forEach(
+      (tip) async {
+        await http.delete(Uri.parse('$_baseUrl/tips/${tip.id}.json'));
+      },
+    );
+  }
+
+  void removeTip(Tip x) {
+    print(x.id);
+    _jogos.firstWhere((jogo) => jogo.id == x.gameId).tips.forEach((element) {
+      print(element.id);
+    });
+    _jogos.firstWhere((jogo) => jogo.id == x.gameId).tips.remove(x);
+    print(_jogos.firstWhere((jogo) => jogo.id == x.gameId).tips);
+    http.delete(Uri.parse('$_baseUrl/tips/${x.id}.json'));
+    notifyListeners();
+  }
+
+  void editGame(String nome, String url, Jogo x) {
+    http.put(Uri.parse('$_baseUrl/jogos/${x.id}/titulo.json'), body: '"$nome"');
+    http.put(Uri.parse('$_baseUrl/jogos/${x.id}/capaUrl.json'), body: '"$url"');
+    _jogos.firstWhere((jogo) => jogo.id == x.id).capaUrl = url;
+    _jogos.firstWhere((jogo) => jogo.id == x.id).titulo = nome;
     notifyListeners();
   }
 
   void addTip(Jogo x, Tip y) async {
-    final future = await http.post(
-      Uri.parse('$_baseUrl/tips.json'),
-      body: y.toJson(),
+    final future = await http
+        .post(Uri.parse('$_baseUrl/tips.json'), body: y.toJson())
+        .then(
+      (response) {
+        _jogos.firstWhere((jogo) => jogo.id == x.id).tips.add(
+              Tip(
+                  id: jsonDecode(response.body)['name'],
+                  titulo: y.titulo,
+                  conteudo: y.conteudo,
+                  categoria: y.categoria,
+                  gameId: y.gameId),
+            );
+      },
     );
   }
 
@@ -73,7 +136,6 @@ class JogoState extends ChangeNotifier {
   }
 
   void getTipsByGameId(String id) {
-    print('fazendo request $id');
     List<Tip> dicas = [];
     final res = http.get(Uri.parse('$_baseUrl/tips.json'));
     res.then(
@@ -82,7 +144,6 @@ class JogoState extends ChangeNotifier {
         tips.forEach(
           (key, tip) {
             if (tip['gameId'] == id) {
-              print(tip);
               dicas.add(Tip.fromJson(tip));
             }
           },
