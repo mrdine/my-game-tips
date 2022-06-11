@@ -4,7 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../models/jogo.dart';
+import '../models/jogo_state.dart';
 import '../utils/app_routes.dart';
 
 class MainDrawer extends StatelessWidget {

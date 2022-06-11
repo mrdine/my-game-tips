@@ -1,9 +1,10 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:flutter/material.dart';
+import 'package:mygametips/models/jogo.dart';
 import 'package:provider/provider.dart';
 import '../../components/main_drawer.dart';
-import '../../models/jogo.dart';
+import '../../models/jogo_state.dart';
 import '../../components/jogoItem.dart';
 import '../../utils/app_routes.dart';
 import './addJogoFormScreen.dart';
@@ -109,8 +110,6 @@ class ListJogos extends StatelessWidget {
                                       children: [
                                         ElevatedButton(
                                           onPressed: () {
-                                            print(
-                                                'Adicionando no jogo ${jogo.id}');
                                             Navigator.pushNamed(
                                                 context, AppRoutes.TIPS_FORM,
                                                 arguments: jogo);
@@ -119,8 +118,6 @@ class ListJogos extends StatelessWidget {
                                         ),
                                         ElevatedButton(
                                           onPressed: () {
-                                            print(
-                                                'Vendo dicas do jogo ${jogo.titulo}');
                                             Navigator.pushNamed(
                                                 context, AppRoutes.GAME_TIPS,
                                                 arguments: jogo);

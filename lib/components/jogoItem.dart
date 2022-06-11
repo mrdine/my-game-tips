@@ -1,6 +1,8 @@
 import 'dart:ui';
 
-import '../models/jogo.dart';
+import 'package:mygametips/models/jogo.dart';
+
+import '../models/jogo_state.dart';
 import 'package:flutter/material.dart';
 
 class JogoItem extends StatelessWidget {

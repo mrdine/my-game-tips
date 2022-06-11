@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:getwidget/getwidget.dart';
-import 'package:mygametips/models/jogo.dart';
+import 'package:mygametips/models/jogo_state.dart';
 import 'package:provider/provider.dart';
 
 import '../components/main_drawer.dart';

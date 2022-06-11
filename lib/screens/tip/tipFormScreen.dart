@@ -1,8 +1,8 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:mygametips/models/jogo.dart';
+import 'package:mygametips/models/jogo_state.dart';
 import 'package:mygametips/models/tip.dart';
 import 'package:provider/provider.dart';
 
@@ -17,6 +17,19 @@ class _TipFormScreenState extends State<TipFormScreen> {
   String dropDownValue = 'Dica';
   var tituloControler = TextEditingController();
   var conteudoControler = TextEditingController();
+
+  _submit(JogoState lista, Jogo jogo) {
+    final x = Tip(
+      gameId: jogo.id,
+      id: '12',
+      titulo: tituloControler.text,
+      conteudo: conteudoControler.text,
+      categoria: dropDownValue,
+    );
+    lista.addTip(jogo, x);
+    Navigator.pop(context);
+  }
+
   @override
   Widget build(BuildContext context) {
     final jogo = ModalRoute.of(context)!.settings.arguments as Jogo;
@@ -69,16 +82,7 @@ class _TipFormScreenState extends State<TipFormScreen> {
                 Consumer<JogoState>(
                   builder: (context, lista, child) {
                     return ElevatedButton(
-                      onPressed: () {
-                        final x = Tip(
-                          id: 12,
-                          titulo: tituloControler.text,
-                          conteudo: conteudoControler.text,
-                          categoria: dropDownValue,
-                        );
-                        lista.addTip(jogo, x);
-                        Navigator.pop(context);
-                      },
+                      onPressed: () => _submit(lista, jogo),
                       child: const Text(
                         'Adicionar',
                       ),

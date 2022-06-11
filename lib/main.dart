@@ -5,7 +5,7 @@ import 'package:mygametips/screens/tip/tipFormScreen.dart';
 import 'package:provider/provider.dart';
 import 'screens/jogo/jogosScreen.dart';
 import 'screens/tip/listTipsScreen.dart';
-import 'models/jogo.dart';
+import 'models/jogo_state.dart';
 import 'utils/app_routes.dart';
 import 'screens/tabsScreen.dart';
 

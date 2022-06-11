@@ -3,9 +3,10 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:mygametips/models/jogo.dart';
 import 'package:provider/provider.dart';
 import '../../utils/app_routes.dart';
-import '../../models/jogo.dart';
+import '../../models/jogo_state.dart';
 
 class AddJogoFormScreen extends StatefulWidget {
   void Function(String titulo, String capaUrl) onSubmit;
@@ -24,7 +25,6 @@ class _AddJogoFormScreenState extends State<AddJogoFormScreen> {
 
   _submitForm() {
     if (_tituloController.text.isEmpty || _capaUrlController.text.isEmpty) {
-      print('valores invalidos');
       return;
     }
     widget.onSubmit(_tituloController.text, _capaUrlController.text);

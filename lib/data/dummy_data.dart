@@ -1,4 +1,6 @@
-import '../models/jogo.dart';
+import 'package:mygametips/models/jogo.dart';
+
+import '../models/jogo_state.dart';
 import '../models/tip.dart';
 
 final dummyJogos = [
@@ -9,12 +11,14 @@ final dummyJogos = [
           'https://upload.wikimedia.org/wikipedia/pt/a/aa/The_Elder_Scrolls_5_Skyrim_capa.png',
       tips: [
         const Tip(
-            id: 1,
+            gameId: '0',
+            id: '1',
             titulo: 'Como aprender fireball',
             conteudo: 'Aprendendo',
             categoria: 'Tutorial'),
         const Tip(
-            id: 2,
+            gameId: '0',
+            id: '2',
             titulo: 'Como derrotar Alduin',
             conteudo: 'Apelando',
             categoria: 'Dica'),

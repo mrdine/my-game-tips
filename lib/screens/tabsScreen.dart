@@ -3,7 +3,7 @@ import 'package:mygametips/screens/homeScreen.dart';
 import '../components/main_drawer.dart';
 import '../utils/app_routes.dart';
 import './jogo/jogosScreen.dart';
-import '../models/jogo.dart';
+import '../models/jogo_state.dart';
 
 class TabsScreen extends StatefulWidget {
   const TabsScreen({Key? key}) : super(key: key);
