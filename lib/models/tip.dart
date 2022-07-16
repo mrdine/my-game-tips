@@ -26,6 +26,16 @@ class Tip {
     });
   }
 
+  Map<String, Object> toMapStringObject() {
+    return {
+      'id': id,
+      'titulo': titulo,
+      'conteudo': conteudo,
+      'categoria': categoria,
+      'gameId': gameId,
+    };
+  }
+
   Tip.fromJson(Map<String, dynamic> json)
       : id = json.containsKey('id') ? json['id'] : '',
         gameId = json['gameId'],

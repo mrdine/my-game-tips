@@ -23,6 +23,14 @@ class Jogo {
     };
   }
 
+  Map<String, Object> toMapStringObject() {
+    return {
+      'id': id,
+      'titulo': titulo,
+      'capaUrl': capaUrl,
+    };
+  }
+
   Jogo.fromJson(Map<String, dynamic> json)
       : id = '',
         titulo = json['titulo'],

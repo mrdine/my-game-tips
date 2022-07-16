@@ -7,9 +7,14 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
+import 'package:mygametips/utils/connection_util.dart';
+
+import '../utils/db_util.dart';
 
 class JogoState extends ChangeNotifier {
   final _baseUrl = 'https://mygametips-df312-default-rtdb.firebaseio.com';
+
+  final QTD_OFFLINE_JOGOS = 5;
 
   //https://upload.wikimedia.org/wikipedia/pt/0/06/TW3_Wild_Hunt.png
 
@@ -21,47 +26,116 @@ class JogoState extends ChangeNotifier {
 
   UnmodifiableListView<Jogo> get jogo => UnmodifiableListView(_jogos);
 
-  Future<void> _loadJogos() {
-    return http.get(Uri.parse('$_baseUrl/jogos.json')).then(
-      (response) {
-        final Map<String, dynamic> dadosJogos = json.decode(response.body);
-        final List<Jogo> jogos = [];
-        dadosJogos.forEach(
-          (String id, dynamic dados) {
-            final Jogo jogo = Jogo.fromJson(dados);
-            jogo.id = id;
-            jogos.add(jogo);
-          },
-        );
-        _jogos.clear();
-        _jogos.addAll(jogos);
+  Future<void> _loadJogos() async {
+    if (await ConnectionUtils.isConnected()) {
+      return http.get(Uri.parse('$_baseUrl/jogos.json')).then(
+        (response) async {
+          if (response.statusCode == 200) {
+            await DbUtil.deleteAll(['jogos', 'tips']);
 
-        _loadTips();
+            final Map<String, dynamic> dadosJogos = json.decode(response.body);
+            final List<Jogo> jogos = [];
+            dadosJogos.forEach(
+              (String id, dynamic dados) {
+                final Jogo jogo = Jogo.fromJson(dados);
+                jogo.id = id;
+                jogos.add(jogo);
+              },
+            );
+            _jogos.clear();
+            _jogos.addAll(jogos);
 
-        notifyListeners();
-      },
-    );
+            await _loadTips();
+
+            for (Jogo jogo in _jogos.getRange(
+                0,
+                _jogos.length > QTD_OFFLINE_JOGOS
+                    ? QTD_OFFLINE_JOGOS
+                    : _jogos.length)) {
+              await DbUtil.insert('jogos', jogo.toMapStringObject());
+              await DbUtil.insertAll('tips',
+                  jogo.tips.map((tip) => tip.toMapStringObject()).toList());
+            }
+          } else {
+            final dataList = await DbUtil.getData('jogos');
+            _jogos.clear();
+            _jogos.addAll(dataList
+                .map((e) => Jogo(
+                    id: e['id'],
+                    titulo: e['titulo'],
+                    capaUrl: e['capaUrl'],
+                    tips: []))
+                .toList());
+
+            await _loadTips();
+          }
+          notifyListeners();
+        },
+      );
+    } else {
+      final dataList = await DbUtil.getData('jogos');
+      _jogos.clear();
+      _jogos.addAll(dataList
+          .map((e) => Jogo(
+              id: e['id'],
+              titulo: e['titulo'],
+              capaUrl: e['capaUrl'],
+              tips: []))
+          .toList());
+
+      await _loadTips();
+      notifyListeners();
+    }
   }
 
-  Future<void> _loadTips() {
-    return http.get(Uri.parse('$_baseUrl/tips.json')).then((response) {
-      if (response.body != 'null') {
-        final Map<String, dynamic> dadosTips = json.decode(response.body);
+  Future<void> _loadTips() async {
+    if (await ConnectionUtils.isConnected()) {
+      return http.get(Uri.parse('$_baseUrl/tips.json')).then((response) async {
         final List<Tip> tips = [];
+        if (response.statusCode == 200) {
+          if (response.body != 'null') {
+            final Map<String, dynamic> dadosTips = json.decode(response.body);
 
-        dadosTips.forEach(
-          (String id, dynamic dados) {
-            final Tip tip = Tip.fromJson(dados);
-            tip.id = id;
-            tips.add(tip);
-          },
-        );
-
+            dadosTips.forEach(
+              (String id, dynamic dados) {
+                final Tip tip = Tip.fromJson(dados);
+                tip.id = id;
+                tips.add(tip);
+              },
+            );
+          }
+        } else {
+          final dataList = await DbUtil.getData('tips');
+          tips.addAll(dataList
+              .map((e) => Tip(
+                    id: e['id'],
+                    titulo: e['titulo'],
+                    conteudo: e['conteudo'],
+                    categoria: e['categoria'],
+                    gameId: e['gameId'],
+                  ))
+              .toList());
+        }
         tips.forEach((tip) {
           _jogos.firstWhere((jogo) => jogo.id == tip.gameId).addTip(tip);
         });
-      }
-    });
+      });
+    } else {
+      List<Tip> tips = [];
+      final dataList = await DbUtil.getData('tips');
+      tips.addAll(dataList
+          .map((e) => Tip(
+                id: e['id'],
+                titulo: e['titulo'],
+                conteudo: e['conteudo'],
+                categoria: e['categoria'],
+                gameId: e['gameId'],
+              ))
+          .toList());
+      tips.forEach((tip) {
+        _jogos.firstWhere((jogo) => jogo.id == tip.gameId).addTip(tip);
+      });
+    }
   }
 
   void editTip(Tip tip, Jogo jogo) {
@@ -71,15 +145,14 @@ class JogoState extends ChangeNotifier {
         .removeWhere(((element) => element.id == tip.id));
     _jogos.firstWhere((game) => game.id == jogo.id).tips.add(tip);
     notifyListeners();
+
     http
-        .put(Uri.parse('$_baseUrl/tips/${tip.id}/titulo.json'),
-            body: '"${tip.titulo}"')
+        .put(Uri.parse('$_baseUrl/tips/${tip.id}.json'), body: tip.toJson())
         .then((ob) => print(ob));
-    http.put(Uri.parse('$_baseUrl/tips/${tip.id}/conteudo.json'),
-        body: '"${tip.conteudo}"');
-    http.put(Uri.parse('$_baseUrl/tips/${tip.id}/categoria.json'),
-        body: '"${tip.categoria}"');
-    print('editando dica');
+
+    DbUtil.update('tips', tip.toMapStringObject());
+
+    print('Editando dica');
   }
 
   Future<void> addJogo(Jogo x) {
@@ -93,6 +166,7 @@ class JogoState extends ChangeNotifier {
     return future.then((response) {
       x.id = jsonDecode(response.body)['name'];
       _jogos.add(x);
+
       notifyListeners();
     });
   }
@@ -101,6 +175,7 @@ class JogoState extends ChangeNotifier {
     _removerJogoTips(x);
     _jogos.remove(x);
     http.delete(Uri.parse('$_baseUrl/jogos/${x.id}.json'));
+    DbUtil.deleteGameAndTips(x.id);
     notifyListeners();
   }
 
@@ -120,6 +195,9 @@ class JogoState extends ChangeNotifier {
     _jogos.firstWhere((jogo) => jogo.id == x.gameId).tips.remove(x);
     print(_jogos.firstWhere((jogo) => jogo.id == x.gameId).tips);
     http.delete(Uri.parse('$_baseUrl/tips/${x.id}.json'));
+
+    DbUtil.delete('tips', x.id);
+
     notifyListeners();
   }
 
@@ -128,6 +206,12 @@ class JogoState extends ChangeNotifier {
     http.put(Uri.parse('$_baseUrl/jogos/${x.id}/capaUrl.json'), body: '"$url"');
     _jogos.firstWhere((jogo) => jogo.id == x.id).capaUrl = url;
     _jogos.firstWhere((jogo) => jogo.id == x.id).titulo = nome;
+
+    x.capaUrl = url;
+    x.titulo = nome;
+
+    DbUtil.update('jogos', x.toMapStringObject());
+
     notifyListeners();
   }
 
@@ -135,44 +219,26 @@ class JogoState extends ChangeNotifier {
     final future = await http
         .post(Uri.parse('$_baseUrl/tips.json'), body: y.toJson())
         .then(
-      (response) {
-        _jogos.firstWhere((jogo) => jogo.id == x.id).tips.add(
-              Tip(
-                  id: jsonDecode(response.body)['name'],
-                  titulo: y.titulo,
-                  conteudo: y.conteudo,
-                  categoria: y.categoria,
-                  gameId: y.gameId),
-            );
+      (response) async {
+        if (response.statusCode == 200) {
+          Tip novaTip = Tip(
+              id: jsonDecode(response.body)['name'],
+              titulo: y.titulo,
+              conteudo: y.conteudo,
+              categoria: y.categoria,
+              gameId: y.gameId);
+
+          _jogos.firstWhere((jogo) => jogo.id == x.id).tips.add(novaTip);
+
+          if (await DbUtil.findById('jogos', x.id) != null) {
+            DbUtil.insert('tips', novaTip.toMapStringObject());
+          }
+        }
       },
     );
   }
 
   List<Jogo> getGames() {
     return _jogos;
-  }
-
-  void getTipsByGameId(String id) {
-    List<Tip> dicas = [];
-    final res = http.get(Uri.parse('$_baseUrl/tips.json'));
-    res.then(
-      (res) {
-        if (res.body != null) {
-          final Map<String, dynamic> tips = json.decode(res.body);
-          tips.forEach(
-            (key, tip) {
-              if (tip['gameId'] == id) {
-                dicas.add(Tip.fromJson(tip));
-              }
-            },
-          );
-          _jogos.firstWhere((jogo) => jogo.id == id).tips = dicas;
-        }
-      },
-    );
-  }
-
-  int getNextId() {
-    return _jogos.length + 1;
   }
 }

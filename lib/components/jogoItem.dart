@@ -15,6 +15,11 @@ class JogoItem extends StatelessWidget {
     return Center(
         child: Image.network(
       jogo.capaUrl,
+      errorBuilder: (context, error, stackTrace) {
+        return Column(
+          children: [new Icon(Icons.error), Text(jogo.titulo)],
+        );
+      },
       loadingBuilder: (BuildContext context, Widget child,
           ImageChunkEvent? loadingProgress) {
         if (loadingProgress == null) {
