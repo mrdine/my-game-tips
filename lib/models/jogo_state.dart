@@ -65,18 +65,11 @@ class JogoState extends ChangeNotifier {
   }
 
   void editTip(Tip tip, Jogo jogo) {
-    print(tip.titulo);
-    print(jogo.id);
     _jogos
         .firstWhere((game) => game.id == jogo.id)
         .tips
-        .firstWhere((top) => top.id == tip.id)
-        .titulo = tip.titulo;
-    _jogos
-        .firstWhere((game) => game.id == jogo.id)
-        .tips
-        .firstWhere((top) => top.id == tip.id)
-        .conteudo = tip.conteudo;
+        .removeWhere(((element) => element.id == tip.id));
+    _jogos.firstWhere((game) => game.id == jogo.id).tips.add(tip);
     notifyListeners();
     http
         .put(Uri.parse('$_baseUrl/tips/${tip.id}/titulo.json'),

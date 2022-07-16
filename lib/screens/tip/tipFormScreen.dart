@@ -48,9 +48,17 @@ class _TipFormScreenState extends State<TipFormScreen> {
   Widget build(BuildContext context) {
     final arg =
         ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
-    _tituloControler.text = arg['tip']?.titulo ?? '';
-    _conteudoControler.text = arg['tip']?.conteudo ?? '';
-    dropDownValue = arg['tip']?.categoria ?? 'Dica';
+
+    if (arg['tip'] != null &&
+        _tituloControler.text.isEmpty &&
+        _conteudoControler.text.isEmpty) {
+      setState(() {
+        _tituloControler.text = arg['tip'].titulo;
+        _conteudoControler.text = arg['tip'].conteudo;
+        dropDownValue = arg['tip'].categoria;
+      });
+    }
+
     return Scaffold(
       appBar: AppBar(
           title: arg['jogo'] != null
@@ -87,11 +95,9 @@ class _TipFormScreenState extends State<TipFormScreen> {
                 DropdownButton(
                   value: dropDownValue,
                   items: <String>['Dica', 'Tutorial']
-                      .map<DropdownMenuItem<String>>(
-                    (value) {
-                      return DropdownMenuItem(value: value, child: Text(value));
-                    },
-                  ).toList(),
+                      .map<DropdownMenuItem<String>>((String value) {
+                    return DropdownMenuItem(value: value, child: Text(value));
+                  }).toList(),
                   onChanged: (String? value) {
                     setState(() {
                       dropDownValue = value!;
