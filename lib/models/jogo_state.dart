@@ -35,9 +35,33 @@ class JogoState extends ChangeNotifier {
         );
         _jogos.clear();
         _jogos.addAll(jogos);
+
+        _loadTips();
+
         notifyListeners();
       },
     );
+  }
+
+  Future<void> _loadTips() {
+    return http.get(Uri.parse('$_baseUrl/tips.json')).then((response) {
+      if (response.body != 'null') {
+        final Map<String, dynamic> dadosTips = json.decode(response.body);
+        final List<Tip> tips = [];
+
+        dadosTips.forEach(
+          (String id, dynamic dados) {
+            final Tip tip = Tip.fromJson(dados);
+            tip.id = id;
+            tips.add(tip);
+          },
+        );
+
+        tips.forEach((tip) {
+          _jogos.firstWhere((jogo) => jogo.id == tip.gameId).addTip(tip);
+        });
+      }
+    });
   }
 
   void editTip(Tip tip, Jogo jogo) {
@@ -140,15 +164,17 @@ class JogoState extends ChangeNotifier {
     final res = http.get(Uri.parse('$_baseUrl/tips.json'));
     res.then(
       (res) {
-        final Map<String, dynamic> tips = json.decode(res.body);
-        tips.forEach(
-          (key, tip) {
-            if (tip['gameId'] == id) {
-              dicas.add(Tip.fromJson(tip));
-            }
-          },
-        );
-        _jogos.firstWhere((jogo) => jogo.id == id).tips = dicas;
+        if (res.body != null) {
+          final Map<String, dynamic> tips = json.decode(res.body);
+          tips.forEach(
+            (key, tip) {
+              if (tip['gameId'] == id) {
+                dicas.add(Tip.fromJson(tip));
+              }
+            },
+          );
+          _jogos.firstWhere((jogo) => jogo.id == id).tips = dicas;
+        }
       },
     );
   }

@@ -26,7 +26,6 @@ class ListTipsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final jogo = ModalRoute.of(context)!.settings.arguments as Jogo;
     return Consumer<JogoState>(builder: (context, jogos, child) {
-      jogos.getTipsByGameId(jogo.id);
       if (jogos.jogo.firstWhere((game) => game.id == jogo.id).tips.isNotEmpty) {
         return Scaffold(
           appBar: AppBar(title: Text('Lista de Dicas para ${jogo.titulo}')),

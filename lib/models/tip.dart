@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 
 class Tip {
-  final String id;
+  String id;
   String titulo;
   String conteudo;
   String categoria;
@@ -27,7 +27,7 @@ class Tip {
   }
 
   Tip.fromJson(Map<String, dynamic> json)
-      : id = json['id'],
+      : id = json.containsKey('id') ? json['id'] : '',
         gameId = json['gameId'],
         titulo = json['titulo'],
         conteudo = json['conteudo'],
