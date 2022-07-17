@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "660021793305",
+    "firebase_url": "https://mygametips-df312-default-rtdb.firebaseio.com",
+    "project_id": "mygametips-df312",
+    "storage_bucket": "mygametips-df312.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:660021793305:android:421348459fadf175055088",
+        "android_client_info": {
+          "package_name": "br.ufrn.mygametips"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "660021793305-f8a5etdga31snpghv0c0a8ugkd373neh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDr8Eb0bLkOMAsrYinzidojibdDfsEE9Wg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "660021793305-f8a5etdga31snpghv0c0a8ugkd373neh.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

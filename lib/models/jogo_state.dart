@@ -226,7 +226,8 @@ class JogoState extends ChangeNotifier {
               titulo: y.titulo,
               conteudo: y.conteudo,
               categoria: y.categoria,
-              gameId: y.gameId);
+              gameId: y.gameId,
+              image: y.image);
 
           _jogos.firstWhere((jogo) => jogo.id == x.id).tips.add(novaTip);
 

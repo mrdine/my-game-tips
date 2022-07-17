@@ -1,6 +1,5 @@
 import 'dart:convert';
-
-import 'package:flutter/material.dart';
+import 'dart:io';
 
 class Tip {
   String id;
@@ -8,6 +7,7 @@ class Tip {
   String conteudo;
   String categoria;
   final String gameId;
+  String? image;
 
   Tip({
     required this.id,
@@ -15,6 +15,7 @@ class Tip {
     required this.conteudo,
     required this.categoria,
     required this.gameId,
+    this.image,
   });
 
   String toJson() {
@@ -23,6 +24,7 @@ class Tip {
       'titulo': titulo,
       'conteudo': conteudo,
       'categoria': categoria,
+      'image': image
     });
   }
 
@@ -41,5 +43,6 @@ class Tip {
         gameId = json['gameId'],
         titulo = json['titulo'],
         conteudo = json['conteudo'],
-        categoria = json['categoria'];
+        categoria = json['categoria'],
+        image = json['image'];
 }

@@ -13,7 +13,8 @@ class TipItem extends StatelessWidget {
   final Tip tip;
   final Jogo jogo;
 
-  TipItem({required this.tip, required this.jogo});
+  const TipItem({Key? key, required this.tip, required this.jogo})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -58,7 +59,17 @@ class TipItem extends StatelessWidget {
             titleText: tip.titulo,
             subTitleText: tip.categoria,
           ),
-          content: Text(tip.conteudo),
+          content: Column(
+            children: [
+              Text(tip.conteudo),
+              if (tip.image != null)
+                Image.network(
+                  tip.image!,
+                  height: 220,
+                  width: 220,
+                ),
+            ],
+          ),
         ),
       );
     });

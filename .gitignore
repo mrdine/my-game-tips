@@ -10,7 +10,6 @@
 .svn/
 .vscode
 ios
-android
 web
 windows
 # IntelliJ related
@@ -38,6 +37,8 @@ windows
 # Web related
 lib/generated_plugin_registrant.dart
 
+/linux
+/macos
 # Symbolication related
 app.*.symbols
 

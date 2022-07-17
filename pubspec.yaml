@@ -30,6 +30,9 @@ dependencies:
   flutter:
     sdk: flutter
   provider: ^6.0.0
+  firebase_core:
+  firebase_storage:
+  image_picker:
   sqflite:
   path:
   getwidget: ^2.0.4
