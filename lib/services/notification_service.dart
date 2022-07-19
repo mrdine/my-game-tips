@@ -1,5 +1,4 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_native_timezone/flutter_native_timezone.dart';
 import 'package:timezone/timezone.dart' as tz;
@@ -69,7 +68,8 @@ class NotificationService {
     }
   }
 
-  showNotificationScheduled(CustomNotification notification, Duration duration) {
+  showNotificationScheduled(
+      CustomNotification notification, Duration duration) {
     final date = DateTime.now().add(duration);
 
     localNotificationsPlugin.zonedSchedule(
@@ -82,7 +82,8 @@ class NotificationService {
       ),
       payload: notification.payload,
       androidAllowWhileIdle: true,
-      uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime,
+      uiLocalNotificationDateInterpretation:
+          UILocalNotificationDateInterpretation.absoluteTime,
     );
   }
 
@@ -99,7 +100,8 @@ class NotificationService {
   }
 
   checkForNotifications() async {
-    final details = await localNotificationsPlugin.getNotificationAppLaunchDetails();
+    final details =
+        await localNotificationsPlugin.getNotificationAppLaunchDetails();
     if (details != null && details.didNotificationLaunchApp) {
       _onSelectNotification(details.payload);
     }
