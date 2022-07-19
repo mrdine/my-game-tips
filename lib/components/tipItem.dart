@@ -65,7 +65,7 @@ class TipItem extends StatelessWidget {
               if (tip.image != null)
                 Image.network(
                   tip.image!,
-                  height: 220,
+                  height: 150,
                   width: 220,
                 ),
             ],
