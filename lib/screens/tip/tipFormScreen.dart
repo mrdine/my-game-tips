@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'dart:math';
 
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -7,6 +6,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:mygametips/models/jogo.dart';
 import 'package:mygametips/models/jogo_state.dart';
 import 'package:mygametips/models/tip.dart';
+import 'package:mygametips/services/notification_service.dart';
 import 'package:path/path.dart';
 import 'package:provider/provider.dart';
 
@@ -61,6 +61,8 @@ class _TipFormScreenState extends State<TipFormScreen> {
           ),
           jogo);
     }
+    Provider.of<NotificationService>(context, listen: false).showLocalNotification(
+        CustomNotification(id: 12, title: 'Nova Tip Castrada', body: 'Uma nova tip foi cadastrada no Jogo ${jogo.titulo}'));
     Navigator.pop(context);
   }
 
