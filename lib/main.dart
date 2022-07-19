@@ -1,9 +1,9 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:mygametips/screens/tip/tipFormScreen.dart';
-import 'package:mygametips/services/firebase_notifcication_service.dart';
 import 'package:mygametips/services/notification_service.dart';
 import 'package:provider/provider.dart';
 import 'screens/jogo/jogosScreen.dart';
@@ -23,23 +23,37 @@ class MyApp extends StatelessWidget {
 
   Future<void> intializeApp(BuildContext context) async {
     await Firebase.initializeApp();
-
   }
+
+  Future<void> initMessage(
+      BuildContext context, NotificationService service) async {
+    final token = await FirebaseMessaging.instance.getToken();
+    print(token);
+    FirebaseMessaging.onMessage.listen((RemoteMessage event) {
+      print('Recebi uma mensagem ${event.data}');
+      service.showLocalNotification(CustomNotification(
+          id: 12, title: event.data['titulo'], body: event.data['body']));
+    });
+  }
+
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-        future: intializeApp(context),
-        builder: (context, snp) {
-          return ChangeNotifierProvider(
-            create: (constext) => JogoState(),
-            child: MultiProvider(
-              providers: [
-                Provider<NotificationService>(
-                  create: (context) => NotificationService(),
-                ),
-              ],
-              child: MaterialApp(
+    return ChangeNotifierProvider(
+      create: (constext) => JogoState(),
+      child: MultiProvider(
+        providers: [
+          Provider<NotificationService>(
+            create: (context) => NotificationService(),
+          ),
+        ],
+        child: FutureBuilder(
+            future: intializeApp(context),
+            builder: (context, snp) {
+              final notifyService =
+                  Provider.of<NotificationService>(context, listen: false);
+              initMessage(context, notifyService);
+              return MaterialApp(
                 title: 'My game tips',
                 theme: ThemeData(
                     colorScheme: ThemeData().colorScheme.copyWith(
@@ -61,9 +75,9 @@ class MyApp extends StatelessWidget {
                   AppRoutes.TIPS_FORM: (ctx) => TipFormScreen(),
                   //AppRoutes.SETTINGS: (ctx) => SettingsScreen(),
                 },
-              ),
-            ),
-          );
-        });
+              );
+            }),
+      ),
+    );
   }
 }

@@ -25,10 +25,12 @@ class _TabsScreenState extends State<TabsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text('My Game Tips')),
-      body: _screens[_indexSelectedScreen],
-      drawer: MainDrawer(),
-    );
+    return FutureBuilder(builder: (context, snp) {
+      return Scaffold(
+        appBar: AppBar(title: Text('My Game Tips')),
+        body: _screens[_indexSelectedScreen],
+        drawer: MainDrawer(),
+      );
+    });
   }
 }
